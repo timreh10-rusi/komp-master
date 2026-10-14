@@ -65,6 +65,8 @@ ul{list-style:none}
 #matrix{position:fixed;inset:0;width:100%;height:100%;z-index:-2;display:block;transition:opacity .2s linear}
 #gl{position:fixed;left:0;top:0;width:100%;height:100%;height:100lvh;z-index:-2;display:block;opacity:0;transition:opacity .8s var(--ease);pointer-events:none}
 html.gl #gl{opacity:1}
+#glHero{position:absolute;left:0;top:0;z-index:1;display:block;pointer-events:none;opacity:0;transition:opacity .8s var(--ease)}
+html.gl #glHero{opacity:1}
 html.gl #matrix{display:none}
 /* в 3D-режиме заголовок и ноутбук рисует сцена; DOM-версии остаются только для раскладки */
 html.gl .giant{visibility:hidden}
@@ -529,6 +531,7 @@ html[data-theme="light"] .theme-btn .i-moon{translate:0 -140%;rotate:90deg;opaci
 
 <main>
 <section class="hero" id="top">
+  <canvas id="glHero" aria-hidden="true"></canvas>
   <h1 class="sr">Компьютерный мастер в Новороссийске</h1>
   <div class="giant" id="giant" aria-hidden="true"><span class="ln" data-t="Компьютерный"><span class="tx">Компьютерный</span></span><span class="ln" data-t="мастер"><span class="tx">мастер</span></span></div>
 
@@ -1244,7 +1247,7 @@ void main(){ vUv = aPos * .5 + .5; gl_Position = vec4(aPos, 0., 1.); }`;
     let gave = false, api = null;
     try {
       api = await Promise.race([
-        load3d().then(m => m.start({ canvas: $('#gl'), pin: hero, stage, giant, hero }, fitGiant, to2D, () => gave)),
+        load3d().then(m => m.start({ canvas: $('#gl'), heroCanvas: $('#glHero'), pin: hero, stage, giant, hero }, fitGiant, to2D, () => gave)),
         wait(3000).then(() => null)
       ]);
     } catch (e) { console.warn('3D-сцена не загрузилась, включена лёгкая версия', e); }
